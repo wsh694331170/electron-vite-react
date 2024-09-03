@@ -1,52 +1,46 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+.container {
+  padding: 24px;
+}
+.textarea-custom {
+  border: none;
+  box-shadow: none;
+  overflow: auto;
+  box-sizing: border-box;
+}
+.textarea-custom::-webkit-scrollbar {
+  display: none; /* Chrome, Safari 和 Opera */
+}
+.textarea-custom {
+  -ms-overflow-style: none;  /* IE 和 Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+.textarea-custom:focus {
+  border: none;
+  box-shadow: none;
 }
 
-.logo-box {
-  position: relative;
-  height: 9em;
+.container .item1 {
+  flex: 0 0 calc(80% - 24px);
 }
 
-.logo {
-  position: absolute;
-  left: calc(50% - 4.5em);
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.container .item2 {
+  flex: 0 0 calc(20% - 24px);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+.container .item3 {
+  flex: 0 0 calc(60% - 24px);
+}
+
+.container .item4 {
+  flex: 0 0 calc(40% - 24px);
+}
+
+/* Media query for small screens */
+@media (max-width: 600px) {
+  .container .item1,
+  .container .item2,
+  .container .item3,
+  .container .item4 {
+    flex: 0 0 100%;
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .logo.electron {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-.flex-center {
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
