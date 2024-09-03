@@ -1,12 +1,12 @@
 import ReactEcharts from "echarts-for-react";
 import 'echarts-gl';
 
-export const MyELine = (props) => {
+export const MyELine = (props: any) => {
   const data = props.data || []
   const options = {
     tooltip: {
       trigger: "axis",
-      formatter: (params) => {
+      formatter: (params: any) => {
         const time = params[0].name
         const zx = params[0].data;
         return `阻抗: ${zx}<br/>时间: ${time}`;
@@ -14,7 +14,7 @@ export const MyELine = (props) => {
     },
     xAxis: {
       type: "category",
-      data: data.map((item) => item.time),
+      data: data.map((item: any) => item.time),
       name: '时间/s',
       nameLocation: 'end', // 在轴的末端显示名称
       nameTextStyle: {
@@ -49,7 +49,7 @@ export const MyELine = (props) => {
       {
         name: "zx",
         type: "line",
-        data: data.map((item) => item.zx),
+        data: data.map((item: any) => item.zx),
         smooth: true,
         renderMode: 'gl' // 启用 WebGL 渲染
       },

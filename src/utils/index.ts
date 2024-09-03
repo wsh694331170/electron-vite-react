@@ -1,5 +1,5 @@
 // 计算相位角 θ
-function calculatePhaseAngle(UZ, UR) {
+function calculatePhaseAngle(UZ: number, UR: number) {
   // 根据公式 θ = arccos((|Ui|^2 - |UR|^2 - |UZ|^2) / (2 * |UR| * |UZ|)) 计算相位角
   const UiSquared = Math.pow((UZ+UR), 2);
   const URSquared = Math.pow(UR, 2);
@@ -21,12 +21,13 @@ function calculatePhaseAngle(UZ, UR) {
 }
 
 // 阻抗计算ZX
-export function calculateImpedance(UZ, UR, RS) {
+export function calculateImpedance(UZ: number, UR: number, RS: number) {
   // 根据公式 Zx = RS * UZ/UR * θ 计算阻抗
+  // @ts-ignore
   return RS * UZ / UR * calculatePhaseAngle(UR, UZ)
 }
 
-export function createTimeNodes(length, totalSeconds) {
+export function createTimeNodes(length: number, totalSeconds: number) {
   // 创建一个空数组来存储时间节点
   let timeNodes = new Array(length);
 
@@ -41,7 +42,7 @@ export function createTimeNodes(length, totalSeconds) {
   return timeNodes;
 }
 
-export function mergeArraysToData(timeArray, zxArray) {
+export function mergeArraysToData(timeArray: any[], zxArray: any[]) {
   // 检查数组长度是否匹配
   if (timeArray.length !== zxArray.length) {
       throw new Error('数组长度必须匹配');
@@ -61,7 +62,7 @@ export function mergeArraysToData(timeArray, zxArray) {
   return data;
 }
 
-export function sampleData(originalData, sampleRate) {
+export function sampleData(originalData: any[], sampleRate: number) {
   if (!Array.isArray(originalData) || originalData.length === 0) {
     console.error('原始数据必须是一个非空数组');
     return [];
@@ -78,7 +79,7 @@ export function sampleData(originalData, sampleRate) {
 
   return sampledData;
 }
-export function sampleDataWithAverage(originalData, sampleRate) {
+export function sampleDataWithAverage(originalData: any[], sampleRate: number) {
   if (!Array.isArray(originalData) || originalData.length === 0) {
     console.error('原始数据必须是一个非空数组');
     return [];

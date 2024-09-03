@@ -11,11 +11,11 @@ import {
   Tooltip,
 } from "antd";
 import { DownloadOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, SetStateAction } from "react";
 import { saveAs } from "file-saver";
 import * as htmlToImage from "html-to-image";
 import { nanoid } from "nanoid";
-import { MyELine } from "./components/ELine.jsx";
+import { MyELine } from "./components/ELine";
 import Tips from "./components/Tips.jsx";
 import HexToDecimalConverter from "./components/HexToDecimalConverter.jsx";
 import {
@@ -24,8 +24,8 @@ import {
   mergeArraysToData,
   sampleData,
   sampleDataWithAverage,
-} from "./utils/index.js";
-import { WATERMARK_IMG } from './constants/index.js';
+} from "./utils/index";
+import { WATERMARK_IMG } from './constants/index';
 import "./App.css";
 
 const { TextArea } = Input;
@@ -61,20 +61,20 @@ function App() {
     }
   }, []);
 
-  const changeRS = useCallback((value) => {
+  const changeRS = useCallback((value: any) => {
     setRS(parseFloat(value));
   }, []);
-  const changeUR = useCallback((value) => {
+  const changeUR = useCallback((value: any) => {
     setUR(parseFloat(value));
   }, []);
-  const changeSecond = useCallback((value) => {
+  const changeSecond = useCallback((value: any) => {
     setSecond(value || 2);
   }, []);
-  const changeSampleRate = useCallback((value) => {
+  const changeSampleRate = useCallback((value: any) => {
     setSampleRate(value);
   }, []);
 
-  const successTranfer = useCallback((value) => {
+  const successTranfer = useCallback((value: any) => {
     setUA(value);
     message.success("串口数据读取成功！");
   }, []);
@@ -82,7 +82,7 @@ function App() {
     const zx = UA.map((ua) => {
       return calculateImpedance(ua, UR, RS);
     }).filter(Boolean);
-    setZX(zx);
+    setZX(zx as any);
     const timers = createTimeNodes(zx.length, second);
     let lines = mergeArraysToData(timers, zx);
     console.log(1, lines.length);
@@ -90,7 +90,7 @@ function App() {
       lines = avghecked ? sampleDataWithAverage(lines, sampleRate) : sampleData(lines, sampleRate);
     }
     console.log(2, lines.length);
-    setLineData(lines); // 更新折线图数据
+    setLineData(lines as any); // 更新折线图数据
     message.success("阻抗计算结束！折线图表已生成！");
   }, [UA, second, checked, UR, RS, avghecked, sampleRate]);
   // 创建并下载文本文件的函数
@@ -116,6 +116,7 @@ function App() {
   const downloadLineData = () => {
     // 将数组转换为字符串，格式为 [time,value]，[time,value]
     const formattedString = lineData
+    // @ts-ignore
       .map((item) => `[${item.time},${item.zx}]`)
       .join(",");
     // 创建一个 Blob 对象
@@ -144,11 +145,13 @@ function App() {
     >
       <div className="container">
         <Tips />
+        {/* @ts-ignore */}
         <Flex gap={24} horizontal wrap>
           <Card
             title="时间-阻抗变化趋势图"
             hoverable
             className="item1"
+            // @ts-ignore
             ref={lineRef}
           >
             <Meta description={`UR：${UR} V`} />
@@ -239,6 +242,7 @@ function App() {
             />
           </Card>
           <Card className="item4" hoverable>
+            {/* @ts-ignore */}
             <Flex gap={24} horizontal wrap justify="flex-start">
               <div style={{ flex: "0 0 100%", display: "flex" }}>
                 <Timeline
