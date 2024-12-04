@@ -2,6 +2,7 @@ import React from 'react';
 import { Upload, Button } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
 import _ from 'lodash'
+import { hexToDecimal } from "../utils/index";
 
 const HexToDecimalConverter = (props: any) => {
 
@@ -14,7 +15,7 @@ const HexToDecimalConverter = (props: any) => {
       // @ts-ignore
       const lines = content.split('\n');
       // @ts-ignore
-      const num10s = _.flatMap(lines.map(line => line.trim().split(/\s+/).map(hex => parseInt(hex, 16)).filter(Boolean)))
+      const num10s = _.flatMap(lines.map(line => line.trim().split(/\s+/).map(hex => hexToDecimal(hex)).filter(Boolean)))
       props.successTranfer(num10s)
     };
 
@@ -29,7 +30,7 @@ const HexToDecimalConverter = (props: any) => {
       beforeUpload={beforeUpload}
       showUploadList={false}
     >
-      <Button icon={<UploadOutlined />}>读取串口数据</Button>
+      <Button icon={<UploadOutlined />}>读取比值</Button>
     </Upload>
   );
 };

@@ -104,3 +104,29 @@ export function sampleDataWithAverage(originalData: any[], sampleRate: number) {
 
   return sampledData;
 }
+
+export function calculateImpedanceTest(bz: number, rs: number) {
+  return bz * rs;
+}
+
+export function hexToDecimal(hex: string) {
+  // 使用正则表达式匹配整数部分和小数部分
+  const match = hex.match(/^0x([0-9A-Fa-f]+)(\.([0-9A-Fa-f]+))?$/);
+  if (!match) return NaN;
+
+  const integerPart = match[1];
+  const fractionalPart = match[3] || '';
+
+  // 将整数部分转换为 10 进制
+  const integerDecimal = parseInt(integerPart, 16);
+
+  // 将小数部分转换为 10 进制
+  let fractionalDecimal = 0;
+  for (let i = 0; i < fractionalPart.length; i++) {
+    const digit = parseInt(fractionalPart[i], 16);
+    fractionalDecimal += digit / Math.pow(16, i + 1);
+  }
+
+  // 合并整数部分和小数部分
+  return integerDecimal + fractionalDecimal;
+}

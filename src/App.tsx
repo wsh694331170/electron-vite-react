@@ -11,7 +11,7 @@ import {
   Tooltip,
 } from "antd";
 import { DownloadOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import { useState, useRef, useCallback, SetStateAction } from "react";
+import { useState, useRef, useCallback } from "react";
 import { saveAs } from "file-saver";
 import * as htmlToImage from "html-to-image";
 import { nanoid } from "nanoid";
@@ -19,11 +19,11 @@ import { MyELine } from "./components/ELine";
 import Tips from "./components/Tips.jsx";
 import HexToDecimalConverter from "./components/HexToDecimalConverter.jsx";
 import {
-  calculateImpedance,
   createTimeNodes,
   mergeArraysToData,
   sampleData,
   sampleDataWithAverage,
+  calculateImpedanceTest,
 } from "./utils/index";
 import { WATERMARK_IMG } from './constants/index';
 import "./App.css";
@@ -31,10 +31,9 @@ import "./App.css";
 const { TextArea } = Input;
 const { Meta } = Card;
 function App() {
-  const [UR, setUR] = useState(60);
   const [RS, setRS] = useState(500);
   const [second, setSecond] = useState(2);
-  const [UA, setUA] = useState([]);
+  const [BZ, setBZ] = useState([]);
   const [ZX, setZX] = useState([]);
   const [lineData, setLineData] = useState([]);
   const [checked, setChecked] = useState(false);
@@ -64,9 +63,6 @@ function App() {
   const changeRS = useCallback((value: any) => {
     setRS(parseFloat(value));
   }, []);
-  const changeUR = useCallback((value: any) => {
-    setUR(parseFloat(value));
-  }, []);
   const changeSecond = useCallback((value: any) => {
     setSecond(value || 2);
   }, []);
@@ -75,24 +71,23 @@ function App() {
   }, []);
 
   const successTranfer = useCallback((value: any) => {
-    setUA(value);
+    setBZ(value);
     message.success("串口数据读取成功！");
   }, []);
   const handleCalculateImpedance = useCallback(async () => {
-    const zx = UA.map((ua) => {
-      return calculateImpedance(ua, UR, RS);
+    const zx = BZ.map((bz) => {
+      return calculateImpedanceTest(bz, RS);
     }).filter(Boolean);
     setZX(zx as any);
     const timers = createTimeNodes(zx.length, second);
     let lines = mergeArraysToData(timers, zx);
-    console.log(1, lines.length);
     if (checked) {
       lines = avghecked ? sampleDataWithAverage(lines, sampleRate) : sampleData(lines, sampleRate);
     }
     console.log(2, lines.length);
     setLineData(lines as any); // 更新折线图数据
     message.success("阻抗计算结束！折线图表已生成！");
-  }, [UA, second, checked, UR, RS, avghecked, sampleRate]);
+  }, [second, checked, RS, avghecked, sampleRate]);
   // 创建并下载文本文件的函数
   const downloadZXData = () => {
     // 将数组转换为字符串，使用英文逗号分隔
@@ -154,25 +149,14 @@ function App() {
             // @ts-ignore
             ref={lineRef}
           >
-            <Meta description={`UR：${UR} V`} />
-            <Meta description={`RS：${RS} Ω`} />
+            <Meta description={`标准参考电阻值：${RS} Ω`} />
             <Meta description={`数据时长：${second} S`} />
             <MyELine data={lineData} />
           </Card>
           <Card title="预填数据" hoverable className="item2">
             <Flex gap={24} vertical>
               <div>
-                <span>UR：</span>
-                <InputNumber
-                  addonAfter="V"
-                  step="0.000001"
-                  onChange={changeUR}
-                  stringMode
-                  value={UR}
-                />
-              </div>
-              <div>
-                <span>RS：</span>
+                <span>标准参考电阻值：</span>
                 <InputNumber
                   addonAfter="Ω"
                   step="0.000001"
@@ -232,11 +216,11 @@ function App() {
               )}
             </Flex>
           </Card>
-          <Card title="UA串口值" className="item3" hoverable>
+          <Card title="UCole-Cole/URef" className="item3" hoverable>
             <TextArea
               readOnly
               rows={5}
-              value={UA}
+              value={BZ}
               style={{ resize: "none" }}
               className="textarea-custom"
             />
