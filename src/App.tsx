@@ -25,7 +25,6 @@ import {
   sampleDataWithAverage,
   calculateImpedanceTest,
 } from "./utils/index";
-import { WATERMARK_IMG } from './constants/index';
 import "./App.css";
 
 const { TextArea } = Input;
@@ -82,7 +81,9 @@ function App() {
     const timers = createTimeNodes(zx.length, second);
     let lines = mergeArraysToData(timers, zx);
     if (checked) {
-      lines = avghecked ? sampleDataWithAverage(lines, sampleRate) : sampleData(lines, sampleRate);
+      lines = avghecked
+        ? sampleDataWithAverage(lines, sampleRate)
+        : sampleData(lines, sampleRate);
     }
     console.log(2, lines.length);
     setLineData(lines as any); // 更新折线图数据
@@ -111,7 +112,7 @@ function App() {
   const downloadLineData = () => {
     // 将数组转换为字符串，格式为 [time,value]，[time,value]
     const formattedString = lineData
-    // @ts-ignore
+      // @ts-ignore
       .map((item) => `[${item.time},${item.zx}]`)
       .join(",");
     // 创建一个 Blob 对象
@@ -131,92 +132,31 @@ function App() {
   };
 
   return (
-    <Watermark
-      image={WATERMARK_IMG}
-      gap={[300, 300]}
-      rotate={0}
-      width={100}
-      height={100}
-    >
-      <div className="container">
+    <div className="container">
+      <div style={{ marginBottom: 10 }}>
         <Tips />
-        {/* @ts-ignore */}
-        <Flex gap={24} horizontal wrap>
-          <Card
-            title="时间-阻抗变化趋势图"
-            hoverable
-            className="item1"
-            // @ts-ignore
-            ref={lineRef}
-          >
-            <Meta description={`标准参考电阻值：${RS} Ω`} />
-            <Meta description={`数据时长：${second} S`} />
-            <MyELine data={lineData} />
-          </Card>
-          <Card title="预填数据" hoverable className="item2">
-            <Flex gap={24} vertical>
-              <div>
-                <span>标准参考电阻值：</span>
-                <InputNumber
-                  addonAfter="Ω"
-                  step="0.000001"
-                  onChange={changeRS}
-                  stringMode
-                  value={RS}
-                />
-              </div>
-              <div>
-                <span>数据时长：</span>
-                <InputNumber
-                  addonAfter="S"
-                  step="1"
-                  min={1}
-                  onChange={changeSecond}
-                  value={second}
-                />
-              </div>
-              <div>
-                <span>是否开启数据抽样：</span>
-                <Switch
-                  checkedChildren="开启"
-                  unCheckedChildren="关闭"
-                  checked={checked}
-                  onChange={(val) => setChecked(val)}
-                />
-              </div>
-              {checked && (
-                <>
-                  <div>
-                    <Tooltip
-                      title={`每${sampleRate}个数据点中只选一个进行绘制`}
-                    >
-                      <span>
-                        抽样比例：
-                        <QuestionCircleOutlined />
-                      </span>
-                    </Tooltip>
-                    <InputNumber
-                      addonAfter="个"
-                      step="1"
-                      min={1}
-                      onChange={changeSampleRate}
-                      value={sampleRate}
-                    />
-                  </div>
-                  <div>
-                    <span>抽样数据是否平均：</span>
-                    <Switch
-                      checkedChildren="开启"
-                      unCheckedChildren="关闭"
-                      checked={avghecked}
-                      onChange={(val) => setAvgChecked(val)}
-                    />
-                  </div>
-                </>
-              )}
-            </Flex>
-          </Card>
-          <Card title="UCole-Cole/URef" className="item3" hoverable>
+      </div>
+
+      {/* @ts-ignore */}
+      <Flex gap={24} vertical wrap>
+      <Card
+          title="UCole-Cole/URef"
+          extra={
+            <Button
+              type="primary"
+              onClick={handleCalculateImpedance}
+              className="downloadBtn"
+            >
+              计算阻抗
+            </Button>
+          }
+          className="item3"
+          hoverable
+        >
+          {BZ.length == 0 && (
+            <HexToDecimalConverter successTranfer={successTranfer} />
+          )}
+          {BZ.length > 0 && (
             <TextArea
               readOnly
               rows={5}
@@ -224,59 +164,103 @@ function App() {
               style={{ resize: "none" }}
               className="textarea-custom"
             />
-          </Card>
-          <Card className="item4" hoverable>
-            {/* @ts-ignore */}
-            <Flex gap={24} horizontal wrap justify="flex-start">
-              <div style={{ flex: "0 0 100%", display: "flex" }}>
-                <Timeline
-                  mode="left"
-                  items={[
-                    {
-                      label: "步骤一",
-                      children: (
-                        <HexToDecimalConverter
-                          successTranfer={successTranfer}
-                        />
-                      ),
-                    },
-                    {
-                      label: "步骤二",
-                      children: (
-                        <Button
-                          type="primary"
-                          onClick={handleCalculateImpedance}
-                          className="downloadBtn"
-                        >
-                          计算阻抗
-                        </Button>
-                      ),
-                    },
-                  ]}
-                />
-              </div>
-              <Button
-                icon={<DownloadOutlined />}
-                onClick={downloadZXData}
-                className="downloadBtn"
-              >
-                保存阻抗数据
-              </Button>
+          )}
+        </Card>
+        <Card
+          title="时间-阻抗变化趋势图"
+          hoverable
+          className="item1"
+          extra={
+            <>
               <Button
                 icon={<DownloadOutlined />}
                 onClick={downloadLineData}
                 className="downloadBtn"
+                style={{ marginRight: 10 }}
               >
                 保存图表数据
               </Button>
               <Button icon={<DownloadOutlined />} onClick={downloadDivAsImage}>
                 保存图表为图片
               </Button>
-            </Flex>
-          </Card>
-        </Flex>
-      </div>
-    </Watermark>
+            </>
+          }
+        >
+          <Meta
+            description={
+              <Flex gap={24}>
+                <div>
+                  <span>标准参考电阻值：</span>
+                  <InputNumber
+                    size="small"
+                    addonAfter="Ω"
+                    step="0.000001"
+                    onChange={changeRS}
+                    stringMode
+                    value={RS}
+                  />
+                </div>
+                <div>
+                  <span>数据时长：</span>
+                  <InputNumber
+                    size="small"
+                    addonAfter="S"
+                    step="1"
+                    min={1}
+                    onChange={changeSecond}
+                    value={second}
+                  />
+                </div>
+                <div>
+                  <span>是否开启数据抽样：</span>
+                  <Switch
+                    checkedChildren="开启"
+                    unCheckedChildren="关闭"
+                    checked={checked}
+                    onChange={(val) => setChecked(val)}
+                  />
+                </div>
+                {checked && (
+                  <>
+                    <div>
+                      <Tooltip
+                        title={`每${sampleRate}个数据点中只选一个进行绘制`}
+                      >
+                        <span>
+                          抽样比例：
+                          <QuestionCircleOutlined />
+                        </span>
+                      </Tooltip>
+                      <InputNumber
+                        size="small"
+                        addonAfter="个"
+                        step="1"
+                        min={1}
+                        onChange={changeSampleRate}
+                        value={sampleRate}
+                      />
+                    </div>
+                    <div>
+                      <span>抽样数据是否平均：</span>
+                      <Switch
+                        checkedChildren="开启"
+                        unCheckedChildren="关闭"
+                        checked={avghecked}
+                        onChange={(val) => setAvgChecked(val)}
+                      />
+                    </div>
+                  </>
+                )}
+              </Flex>
+            }
+          />
+
+          <div ref={lineRef}>
+            <MyELine data={lineData} />
+          </div>
+        </Card>
+      </Flex>
+    </div>
   );
 }
 

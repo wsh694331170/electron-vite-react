@@ -9,7 +9,7 @@ export const MyELine = (props: any) => {
       formatter: (params: any) => {
         const time = params[0].name
         const zx = params[0].data;
-        return `阻抗: ${zx}<br/>时间: ${time}`;
+        return `幅值: ${zx}<br/>时间: ${time}`;
       },
     },
     xAxis: {
@@ -24,7 +24,7 @@ export const MyELine = (props: any) => {
     },
     yAxis: {
       type: "value",
-      name: '阻抗/Ω',
+      name: '幅值/Ω',
       nameLocation: 'end', // 在轴的末端显示名称
       nameTextStyle: {
         fontSize: 12,

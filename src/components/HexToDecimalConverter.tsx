@@ -1,9 +1,12 @@
 import React from 'react';
-import { Upload, Button } from 'antd';
+import { Upload, Button, message } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
+import { InboxOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
 import _ from 'lodash'
 import { hexToDecimal } from "../utils/index";
 
+const { Dragger } = Upload;
 const HexToDecimalConverter = (props: any) => {
 
   const beforeUpload = (file: any) => {
@@ -24,14 +27,18 @@ const HexToDecimalConverter = (props: any) => {
     // 阻止`Upload`组件把文件上传到服务器
     return false;
   };
+  const newProps: UploadProps = {
+    beforeUpload,
+    showUploadList: false,
+  }
 
   return (
-    <Upload
-      beforeUpload={beforeUpload}
-      showUploadList={false}
-    >
-      <Button icon={<UploadOutlined />}>读取比值</Button>
-    </Upload>
+    <Dragger {...newProps}>
+    <p className="ant-upload-drag-icon">
+      <InboxOutlined />
+    </p>
+    <p className="ant-upload-text">点击或拖拽文件至此处读取</p>
+  </Dragger>
   );
 };
 
