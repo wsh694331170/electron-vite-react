@@ -23,6 +23,7 @@ import {
   sampleDataWithAverage,
   calculateImpedanceTest,
 } from "./utils/index";
+import { WATERMARK_IMG } from './constants/index';
 import "./App.css";
 
 const { TextArea } = Input;
@@ -130,6 +131,13 @@ function App() {
   };
 
   return (
+    <Watermark
+       image={WATERMARK_IMG}
+       gap={[300, 300]}
+       rotate={0}
+       width={100}
+       height={100}
+     >
     <div className="container">
       <div style={{ marginBottom: 10 }}>
         <Tips />
@@ -259,6 +267,7 @@ function App() {
         </Card>
       </Flex>
     </div>
+    </Watermark>
   );
 }
 
