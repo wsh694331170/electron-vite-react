@@ -252,7 +252,7 @@ function App() {
               </Flex>
             }
           />
-
+         {/* @ts-ignore */}
           <div ref={lineRef}>
             <MyELine data={lineData} />
           </div>
